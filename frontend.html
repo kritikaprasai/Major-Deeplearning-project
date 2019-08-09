@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+    <head>
+      <title>Breast Cancer Analysis using Histopathalogical Images</title>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- yo bootstrap ko cdn leko hai.download gara system ani chalau.cdn ma internet hunai parcha -->
+        <link rel="stylesheet" href="bootstrap/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" href="css/style.css"> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="bootstrap/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+        </head> 
+        <body>
+           <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header" >
+         
+          <p class="navbar-brand" href="index.html" >Breast Cancer Prediction &amp;  Analysis  </p>
+        </div>
+
+        <div id="navbar-collapse" class="navbar-collapse collapse">
+         
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+        <div>
+          <div>
+            <h2>Predict Your Chance of Having a Breast Cancer </h2>
+            <p>Please Upload Histopathological Images for Breast Cancer Prediction</p>
+          </div>
+        </div>
+    <div>
+      <form  method="POST" enctype="multipart/form-data" id="cancerform">
+        <!-- https://www.tutorialspoint.com/flask/flask_file_uploading.htm  ===> yo bata hera flask garda-->
+        <input type="file" name="predictingimage" accept="image/*" value="cancercells" id="imageforcancer">
+
+        <label for="predictingimage">Select the image to upload</label>
+        
+        </form>
+      </div>
+        <p> <button type="submit" class="btn btn-primary" style="width:100px" onclick="predictionFromBackendCode()">Predict</button></p>
+      </div>
+
+
+      <div class="container">
+  <div class="jumbotron" style="background-color:#d9edf7">
+    <div id="result" style="font-weight: 700;
+    font-size: 20px;">Upload image so that results can be shown</div> 
+
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="jumbotron" style="background-color:#d9edf7">
+    <h2>Breast Cancer Prediction</h2> 
+    <p><mark>"Prevention is better than cure"</mark>With thought of it we are predicting breast cancer whether it is malignant or benign.
+      <mark>Malignant </mark> is cancerous and you may have to visit to doctor.<mark>Benign </mark> is not cancerous i.e you are at low risk but still you should take care of your body</p> 
+  </div>
+  
+</div>
+
+       
+
+<!-- </div>
+<div id="result"></div>  -->     
+                    <script type="text/javascript">  
+                        function predictionFromBackendCode(){                    
+                     var fileField = document.getElementById('imageforcancer');
+                     var formData = new FormData();
+                        formData.append('file',fileField.files[0]);  
+                        console.log(fileField.files[0]) 
+                        if(fileField.files[0].name.includes("jpg")||fileField.files[0].name.includes("png") || fileField.files[0].name.includes("jpeg")){
+
+                        fetch('http://127.0.0.1:8098/predict',{
+                          method: 'POST',
+                          body: formData
+                        })
+                        .then((res)=>{
+                          console.log('inside here',res)
+
+                           return res.json();
+                        })
+                        .then((resss)=>{
+                              
+                              console.log(resss)
+                              if(resss.result > 50){
+                                 document.getElementById('result').innerHTML = 'The image shows occurence of Benign cancer!!'
+
+                              }
+                              else{
+                                document.getElementById('result').innerHTML = 'The image shows occurence of Malignant cancer!!'
+
+                              }
+                             
+                            })
+                        } 
+                        else{
+                          document.getElementById('result').innerHTML = 'Please upload only jpeg/jpg/png image files only'
+                        }                   
+                      } 
+                      
+                    </script>
+
+
+
+        
+    </body>
+</html>
